@@ -13,7 +13,8 @@ import com.hoony.z_giyo.db.entity.Item
 import com.hoony.z_giyo.viewer.ViewerActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), ListAdapter.OnItemClickListener, View.OnClickListener {
+class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListener,
+    View.OnClickListener {
 
     private val viewModel: MainViewModel by viewModels()
 
@@ -31,6 +32,8 @@ class MainActivity : AppCompatActivity(), ListAdapter.OnItemClickListener, View.
             layoutManager =
                 LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
             this.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+
+            adapter = RecyclerViewAdapter(this@MainActivity)
         }
     }
 
@@ -38,7 +41,7 @@ class MainActivity : AppCompatActivity(), ListAdapter.OnItemClickListener, View.
         viewModel.itemLiveData.observe(
             this,
             Observer {
-                rvList.adapter = ListAdapter(it, this)
+                (rvList.adapter as RecyclerViewAdapter).submitList(it)
             }
         )
     }

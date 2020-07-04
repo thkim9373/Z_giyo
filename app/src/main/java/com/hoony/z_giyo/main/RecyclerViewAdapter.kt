@@ -3,12 +3,23 @@ package com.hoony.z_giyo.main
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import com.hoony.z_giyo.R
 import com.hoony.z_giyo.db.entity.Item
 
-class ListAdapter(private val itemList: List<Item>, private val listener: OnItemClickListener) :
-    RecyclerView.Adapter<ItemViewHolder>() {
+class RecyclerViewAdapter(
+    private val listener: OnItemClickListener
+) :
+    ListAdapter<Item, ItemViewHolder>(
+        object : DiffUtil.ItemCallback<Item>() {
+            override fun areItemsTheSame(oldItem: Item, newItem: Item):
+                    Boolean = oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: Item, newItem: Item):
+                    Boolean = oldItem == newItem
+        }
+    ) {
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
@@ -27,11 +38,14 @@ class ListAdapter(private val itemList: List<Item>, private val listener: OnItem
     }
 
     override fun getItemCount(): Int {
-        return itemList.size
+        return when (val count = super.getItemCount()) {
+            0 -> 1
+            else -> count
+        }
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.setListener(listener)
-        holder.setText(itemList[position].text)
+        holder.setText(getItem(position).text)
     }
 }

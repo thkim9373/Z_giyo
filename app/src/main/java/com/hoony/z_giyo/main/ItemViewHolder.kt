@@ -6,7 +6,7 @@ import com.hoony.z_giyo.databinding.ItemSingleTextBinding
 class ItemViewHolder(private val binding: ItemSingleTextBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun setListener(listener: ListAdapter.OnItemClickListener) {
+    fun setListener(listener: RecyclerViewAdapter.OnItemClickListener) {
         binding.clContainer.setOnClickListener {
             if (adapterPosition != RecyclerView.NO_POSITION) {
                 listener.onItemClick(adapterPosition)
